@@ -1,1 +1,2 @@
-"# NijiiroScore" 
+# NijiiroScore
+自分用
