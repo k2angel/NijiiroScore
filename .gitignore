@@ -1,3 +1,5 @@
-./test/
+./.idea
 ./.log
-.idea
+./test
+./.mypy_cache
+./local.py

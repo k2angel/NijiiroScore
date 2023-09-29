@@ -1,49 +1,24 @@
 import glob
 import os
 import shutil
-from logging import (DEBUG, INFO, FileHandler, Formatter, StreamHandler,
-                     getLogger)
-
-
-def make_logger(name):
-    logger = getLogger(name)
-    logger.setLevel(DEBUG)
-
-    st_handler = StreamHandler()
-    st_handler.setLevel(INFO)
-    st_handler.setFormatter(Formatter("[{levelname}] {message}", style="{"))
-    logger.addHandler(st_handler)
-
-    fl_handler = FileHandler(filename=".log", encoding="utf-8", mode="w")
-    fl_handler.setLevel(DEBUG)
-    fl_handler.setFormatter(
-        Formatter(
-            "[{levelname}] {asctime} [{filename}:{lineno}] {message}", style="{"
-        )
-    )
-    logger.addHandler(fl_handler)
-
-    return logger
-
 
 genres = ["01-J-POP", "02-アニメ", "03-ボーカロイド", "04-ゲームミュージック", "05-バラエティ", "06-クラシック",
           "07-ナムコオリジナル", "08-キッズ"]
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    logger = make_logger(__name__)
     oldnijiiro = input("今のニジイロ全曲フォルダーのパス\n> ")
-    logger.debug(f"OldNijiiro: {oldnijiiro}")
+    print(f"OldNijiiro: {oldnijiiro}")
     newnijiiro = input("新しいニジイロ全曲フォルダー､もしくはzipファイルのパス\n> ")
-    logger.debug(f"NewNijiiro: {newnijiiro}")
+    print(f"NewNijiiro: {newnijiiro}")
     if os.path.splitext(newnijiiro)[1] == ".zip":
-        logger.info("Extract...")
+        print("Extract...")
         shutil.unpack_archive(newnijiiro, "./nijiiro")
         newnijiiro = "./nijiiro"
-        logger.info("Complete.")
+        print("Complete.")
     genres = [genre for genre in genres if os.path.exists(os.path.join(oldnijiiro, genre))]
-    logger.debug(genres)
     for genre in genres:
+        print(genre)
         oldnijiiro_tjas = list()
         newnijiiro_tjas = list()
         [oldnijiiro_tjas.append(tja) for tja in glob.glob(os.path.join(oldnijiiro, genre) + "\**\*.tja", recursive=True)]
@@ -60,3 +35,9 @@ if __name__ == "__main__":
                 newnijiiro_score = os.path.splitext(newnijiiro_dir[0])[0] + os.path.basename(score).replace(os.path.splitext(filename)[0], '')
                 shutil.copy(score, newnijiiro_score)
                 print(f"{score} -> {newnijiiro_score} copied.")
+        shutil.rmtree(os.path.join(oldnijiiro, genre))
+        print(f"{os.path.join(oldnijiiro, genre)} deleted.")
+
+    for dir in glob.glob(newnijiiro+"\*/"):
+        path = shutil.move(dir, oldnijiiro)
+        print(f"{dir} -> {path} moved.")
