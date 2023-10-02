@@ -19,10 +19,8 @@ if __name__ == "__main__":
     genres = [genre for genre in genres if os.path.exists(os.path.join(oldnijiiro, genre))]
     for genre in genres:
         print(genre)
-        oldnijiiro_tjas = list()
-        newnijiiro_tjas = list()
-        [oldnijiiro_tjas.append(tja) for tja in glob.glob(os.path.join(oldnijiiro, genre) + "\**\*.tja", recursive=True)]
-        [newnijiiro_tjas.append(tja) for tja in glob.glob(os.path.join(newnijiiro, genre) + "\**\*.tja", recursive=True)]
+        oldnijiiro_tjas = [tja for tja in glob.glob(os.path.join(oldnijiiro, genre) + "\**\*.tja", recursive=True)]
+        newnijiiro_tjas =  [tja for tja in glob.glob(os.path.join(newnijiiro, genre) + "\**\*.tja", recursive=True)]
         for tja in oldnijiiro_tjas:
             filename = os.path.basename(tja)
             newnijiiro_dir = [p for p in newnijiiro_tjas if os.path.basename(p) == filename[filename.find(",") + 1 : len(filename)]]
